@@ -1,0 +1,35 @@
+name: Workshop 4 - Portability Test
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  portability:
+    name: Test on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - windows-latest
+          - ubuntu-latest
+          - macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Show environment
+        run: |
+          python --version
+          python -c "import platform, os; print('Sistema:', platform.system()); print('Procesadores logicos:', os.cpu_count())"
+
+      - name: Run Workshop 4
+        run: python challenge4.py --ends 100000 --repeticiones 1
